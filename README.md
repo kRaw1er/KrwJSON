@@ -2,8 +2,6 @@
 
 Simplified manual json decoding using swift `Decoder` like in javaScript.
 
-Swift 5.5 is required as it supports throwable subscripts and property getters 
-
 Example:
 ```
 let jsonText = """
