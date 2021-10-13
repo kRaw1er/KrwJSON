@@ -37,13 +37,13 @@ struct SampleDTO: JSONDecodable {
     let optValue: String?
     
     init(json: JSON) throws {
-        plain = try json.plain
-        dictStrValue = try json.dict.strValue
-        dictIntValue = try json.dict.intValue
-        dictStringValue = try json.dict["string value"]
-        stringArray = try json.stringArray
-        deepNestedValue = try json.varArray[2].obj
-        optValue = try? json.optValue
+        plain = try json.plain()
+        dictStrValue = try json.dict.strValue()
+        dictIntValue = try json.dict.intValue()
+        dictStringValue = try json.dict["string value"]()
+        stringArray = try json.stringArray()
+        deepNestedValue = try json.varArray[2].obj()
+        optValue = try? json.optValue()
     }
 }
 ```
