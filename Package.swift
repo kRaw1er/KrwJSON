@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.0
 
 import PackageDescription
 
@@ -7,14 +7,17 @@ let package = Package(
     products: [
         .library(
             name: "KrwJSON",
-            targets: ["KrwJSON"]),
+            targets: ["KrwJSON"]
+        ),
     ],
     targets: [
         .target(
             name: "KrwJSON",
-            dependencies: []),
+            dependencies: []
+        ),
         .testTarget(
             name: "KrwJSONTests",
-            dependencies: ["KrwJSON"]),
+            dependencies: ["KrwJSON"]
+        ),
     ]
 )
