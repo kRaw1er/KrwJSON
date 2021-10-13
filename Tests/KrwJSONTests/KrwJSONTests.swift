@@ -27,28 +27,28 @@ final class KrwJSONTests: XCTestCase {
 
     func testStringKey() {
         let json = try! makeJSON()
-        XCTAssertEqual(try json.foo, "string")
+        XCTAssertEqual(try json.foo(), "string")
     }
 
     func testIntKey() {
         let json = try! makeJSON()
-        XCTAssertEqual(try json.bar, 8)
+        XCTAssertEqual(try json.bar(), 8)
     }
 
     func testNestedKey() {
         let json = try! makeJSON()
-        XCTAssertEqual(try json.nested.key, "nested.value")
+        XCTAssertEqual(try json.nested.key(), "nested.value")
     }
 
     func testArrayIndex() {
         let json = try! makeJSON()
-        XCTAssertEqual(try json.array[0], 0)
-        XCTAssertEqual(try json.array[1], 3)
+        XCTAssertEqual(try json.array[0](), 0)
+        XCTAssertEqual(try json.array[1](), 3)
     }
 
     func testDecodable() {
         let json = try! makeJSON()
-        XCTAssertEqual(try json.testDTO, TestDTO(key1: "val1", key2: 39849387498))
+        XCTAssertEqual(try json.testDTO(), TestDTO(key1: "val1", key2: 39849387498))
     }
 
     static var allTests = [
