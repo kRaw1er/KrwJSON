@@ -111,6 +111,14 @@ public struct JSON: Decodable {
         }
     }
 
+    public func map<T>(_ transform: (JSON) throws -> T) throws -> [T] {
+        try self.as([JSON].self).map(transform)
+    }
+
+    public func flatMap<T>(_ transform: (JSON) throws -> JSON) throws -> [T] where T: Decodable {
+        try self.as([JSON].self).map { try transform($0).as(T.self) }
+    }
+
     public var bool: () throws -> Bool { { try self.as(Bool.self) } }
     public var float: () throws -> Float { { try self.as(Float.self) } }
     public var double: () throws -> Double { { try self.as(Double.self) } }
