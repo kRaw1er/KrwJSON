@@ -112,11 +112,29 @@ public struct JSON: Decodable {
     }
 
     public func map<T>(_ transform: (JSON) throws -> T) throws -> [T] {
-        try self.as([JSON].self).map(transform)
+        try compactMap(transform)
     }
 
     public func flatMap<T>(_ transform: (JSON) throws -> JSON) throws -> [T] where T: Decodable {
-        try self.as([JSON].self).map { try transform($0).as(T.self) }
+        try compactMap {
+            try $0.as(T.self)
+        }
+    }
+
+    public func compactMap<T>(_ transform: (JSON) throws -> T?) throws -> [T] {
+        var container = try containerWrapper()
+            .unkeyedContainer()
+
+        var result: [T] = []
+        result.reserveCapacity(container.count ?? 3)
+        while !container.isAtEnd {
+            let json = JSON(containerWrapper: { .unkeyedContainer(container) })
+            if let element = try transform(json) {
+                result.append(element)
+            }
+            try container.skip(1)
+        }
+        return result
     }
 
     public var bool: () throws -> Bool { { try self.as(Bool.self) } }

@@ -18,7 +18,14 @@ final class KrwJSONTests: XCTestCase {
                 "testDTO": {
                     "key1": "val1",
                     "key2": 39849387498
-                }
+                },
+                "objectArray": [
+                    { "message": "asdf1" },
+                    { "message": "asdf2" },
+                    { "message": "asdf3" },
+                    { "wrongMessage": "fdsa" },
+                    { "message": "asdf4" }
+                ]
             }
             """
         return try JSONDecoder()
@@ -51,12 +58,36 @@ final class KrwJSONTests: XCTestCase {
         XCTAssertEqual(try json.testDTO(), TestDTO(key1: "val1", key2: 39849387498))
     }
 
+    func testSingleValue() {
+        let json = try! JSONDecoder().decode(JSON.self, from: "1".data(using: .utf8)!)
+        XCTAssertEqual(try json.int(), 1)
+    }
+
+    func testFlatMap() {
+        let json = try! JSONDecoder().decode(JSON.self, from: "[1, 2, 3]".data(using: .utf8)!)
+        XCTAssertEqual(try json.flatMap { $0 }, [1, 2, 3])
+    }
+
+    func testCompactMap() {
+        let json = try! makeJSON()
+        XCTAssertEqual(try json.objectArray.compactMap { try? $0.message.string() }, ["asdf1", "asdf2", "asdf3", "asdf4"])
+    }
+
+    func testMap() {
+        let json = try! makeJSON()
+        XCTAssertThrowsError(try json.objectArray.map { try $0.message.string() })
+    }
+
     static var allTests = [
         ("testStringKey", testStringKey),
         ("testIntKey", testIntKey),
         ("testNestedKey", testNestedKey),
         ("testArrayIndex", testArrayIndex),
         ("testDecodable", testDecodable),
+        ("testSingleValue", testSingleValue),
+        ("testFlatMap", testFlatMap),
+        ("testCompactMap", testCompactMap),
+        ("testMap", testMap),
     ]
 }
 
