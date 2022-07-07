@@ -73,6 +73,11 @@ final class KrwJSONTests: XCTestCase {
         XCTAssertEqual(try json.objectArray.compactMap { try? $0.message }, ["asdf1", "asdf2", "asdf3", "asdf4"])
     }
 
+    func testShortCompactMap() {
+        let json = try! makeJSON()
+        XCTAssertEqual(try json.array.compactMap(), [0, 3])
+    }
+
     func testMap() {
         let json = try! makeJSON()
         XCTAssertThrowsError(try json.objectArray.map { try $0.message.string })
@@ -87,6 +92,7 @@ final class KrwJSONTests: XCTestCase {
         ("testSingleValue", testSingleValue),
         ("testFlatMap", testFlatMap),
         ("testCompactMap", testCompactMap),
+        ("testShortCompactMap", testShortCompactMap),
         ("testMap", testMap),
     ]
 }

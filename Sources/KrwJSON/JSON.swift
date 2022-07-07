@@ -128,6 +128,10 @@ public struct JSON: Decodable {
         return result
     }
 
+    public func compactMap<T: Decodable>(_ type: T.Type = T.self) throws -> [T] {
+        try compactMap { try? $0.as(T.self) }
+    }
+
     public var bool: Bool { get throws { try self.as(Bool.self) } }
     public var float: Float { get throws { try self.as(Float.self) } }
     public var double: Double { get throws { try self.as(Double.self) } }
