@@ -15,6 +15,11 @@ final class KrwJSONTests: XCTestCase {
                     0,
                     3
                 ],
+                "compactArray": [
+                    0,
+                    3,
+                    "string"
+                ],
                 "testDTO": {
                     "key1": "val1",
                     "key2": 39849387498
@@ -54,6 +59,11 @@ final class KrwJSONTests: XCTestCase {
     }
 
     func testDecodable() {
+        struct TestDTO: Decodable, Equatable {
+            let key1: String
+            let key2: Int
+        }
+
         let json = try! makeJSON()
         XCTAssertEqual(try json.testDTO, TestDTO(key1: "val1", key2: 39849387498))
     }
@@ -83,6 +93,51 @@ final class KrwJSONTests: XCTestCase {
         XCTAssertThrowsError(try json.objectArray.map { try $0.message.string })
     }
 
+    func testSafePropertyWrapper() {
+        struct Foo: Decodable {
+            @JSONSafe
+            var foo: Int?
+        }
+
+        do {
+            let json = try makeJSON()
+            let foo: Foo = try json.as(Foo.self)
+            XCTAssertEqual(foo.foo, nil)
+        } catch {
+            XCTFail("Error: \(error).\nThere should be no exception in parsing")
+        }
+    }
+
+    func testCompactMapPropertyWrapper() {
+        struct Foo: Decodable {
+            @JSONCompactMap
+            var compactArray: [String]
+        }
+
+        do {
+            let json = try makeJSON()
+            let foo: Foo = try json.as(Foo.self)
+            XCTAssertEqual(foo.compactArray, ["string"])
+        } catch {
+            XCTFail("Error: \(error).\nThere should be no exception in parsing")
+        }
+    }
+
+    func testSafeCompactMapPropertyWrapper() {
+        struct Foo: Decodable {
+            @JSONSafeCompactMap
+            var testDTO: [String]?
+        }
+
+        do {
+            let json = try makeJSON()
+            let foo: Foo = try json.as(Foo.self)
+            XCTAssertEqual(foo.testDTO, nil)
+        } catch {
+            XCTFail("Error: \(error).\nThere should be no exception in parsing")
+        }
+    }
+
     static var allTests = [
         ("testStringKey", testStringKey),
         ("testIntKey", testIntKey),
@@ -94,10 +149,8 @@ final class KrwJSONTests: XCTestCase {
         ("testCompactMap", testCompactMap),
         ("testShortCompactMap", testShortCompactMap),
         ("testMap", testMap),
+        ("testSafePropertyWrapper", testSafePropertyWrapper),
+        ("testCompactMapPropertyWrapper", testCompactMapPropertyWrapper),
+        ("testSafeCompactMapPropertyWrapper", testSafeCompactMapPropertyWrapper),
     ]
-}
-
-struct TestDTO: Decodable, Equatable {
-    let key1: String
-    let key2: Int
 }
