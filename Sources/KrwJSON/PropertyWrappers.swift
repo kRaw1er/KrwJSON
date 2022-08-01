@@ -26,3 +26,13 @@ public struct JSONSafeCompactMap<T: Decodable>: JSONDecodable {
         wrappedValue = try? json.compactMap()
     }
 }
+
+extension JSONSafe: Hashable where T: Hashable {}
+extension JSONSafe: Equatable where T: Equatable {}
+
+extension JSONCompactMap: Hashable where T: Hashable {}
+extension JSONCompactMap: Equatable where T: Equatable {}
+
+extension JSONSafeCompactMap: Hashable where T: Hashable {}
+extension JSONSafeCompactMap: Equatable where T: Equatable {}
+
